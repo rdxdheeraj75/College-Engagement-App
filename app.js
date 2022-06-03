@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const session = require('express-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
 
 const saltRounds = 10;
 const app = express();
@@ -52,7 +53,13 @@ const postSchema = new mongoose.Schema({
 const Post = mongoose.model("post", postSchema);
 
 app.get("/", function(req, res){
+  if(req.isAuthenticated())
+  {
+    res.redirect("homepage");
+  }else
+  {
     res.render("home");
+  }
 });
 
 app.get("/register", function(req, res){
@@ -64,7 +71,17 @@ app.get("/login", function(req, res){
 });
 
 app.get("/create-post", function(req,res){
-  res.render("create-post");
+  if(req.isAuthenticated())
+  {
+    res.render("create-post");
+  }else
+  {
+    res.redirect("/");
+  }
+});
+
+app.get("/about",function(req,res){
+  res.render("about",{aboutContent: aboutContent});
 });
 
 app.post("/create-post", function(req, res){
