@@ -9,7 +9,7 @@ app.use(express.static("public"));
 app.set('view engine','ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 
-mongoose.connect("mongodb://localhost:27017/userDB", {useNewUrlParser : true});
+mongoose.connect("mongodb://localhost:27017/collegeApp", {useNewUrlParser : true});
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -18,6 +18,15 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("user",userSchema);
 
+const postSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  author: String,
+  type: String,
+  date: Date
+});
+
+const Post = mongoose.model("post", postSchema);
 
 app.get("/", function(req, res){
     res.render("home");
@@ -31,6 +40,29 @@ app.get("/login", function(req, res){
     res.render("login");
 });
 
+app.get("/create-post", function(req,res){
+  res.render("create-post");
+});
+
+app.post("/create-post", function(req, res){
+    const post = new Post({
+      title: req.body.postTitle,
+      description: req.body.postBody,
+      author: "",
+      type: req.body.postType,
+      date: new Date()
+    });
+    
+
+    post.save(function(err){
+      if(err){
+        console.log(err);
+      }else{
+        res.render("create-post");
+      }
+    });
+});
+
 app.post("/register", function(req, res){
 
     const username = req.body.username;
@@ -40,6 +72,7 @@ app.post("/register", function(req, res){
         username: username,
         password: password
     });
+
 
     newUser.save(function(err){
         if(err){
@@ -66,7 +99,7 @@ app.post("/login", function(req, res){
         {
           if(foundUser.password === password)
           {
-            res.redirect("/homepage");
+            res.redirect("/homepage",);
           }
         }
       }
