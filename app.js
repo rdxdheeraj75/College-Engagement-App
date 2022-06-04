@@ -6,7 +6,7 @@ const session = require('express-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
-
+let loggedInUser ;
 const saltRounds = 10;
 const app = express();
 
@@ -85,10 +85,13 @@ app.get("/about",function(req,res){
 });
 
 app.post("/create-post", function(req, res){
+
+  console.log(req);
+
     const post = new Post({
       title: req.body.postTitle,
       description: req.body.postBody,
-      author: "",
+      author: loggedInUser.username,
       type: req.body.postType,
       date: new Date()
     });
@@ -133,7 +136,8 @@ app.post("/login", function(req, res){
         console.log(err);
       }else {
         passport.authenticate("local")(req, res ,function(){
-          res.render("homepage");
+          loggedInUser = user;
+          res.redirect("/homepage");
         });
       }
     });
@@ -144,11 +148,22 @@ app.get("/homepage", function(req, res){
 
   if(req.isAuthenticated())
   {
-    res.render("homepage");
+    Post.find(function(err,posts){
+      if(!err)
+      res.render("homepage",{posts :  posts});
+    });
+    
   }else
   {
     res.redirect("/");
   }
+});
+
+app.get("/blog", function(req, res){
+  Post.find(function(err,blogs){
+    if(!err)
+    res.render("blog",{blogs :  blogs});
+  });
 });
 
 app.get("/logout",function(req, res){

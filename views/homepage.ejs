@@ -6,4 +6,17 @@
     <h1 id="homepage-text">Welcome to College App</h1>
 </div>
 
+<div class="row d-flex justify-content-center" id="main_box">
+<% for(let i = 0; i < Math.min(posts.length , 3); i++){ %>  
+
+  <div class="main_box_card" style="width: 18rem;">
+    <img class="card-img-top" src="https://www.emergingedtech.com/wp/wp-content/uploads/2018/04/blogging.jpg"  alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title"><%= posts[i].title %></h5>
+      <p class="card-text"><%= posts[i].description.substring(0,100) %></p>
+      <a href="/blog" class="btn btn-primary">Read More</a>
+    </div>
+  </div>
+  <%}%>
+</div>
 <%- include('partials/footer') %>
