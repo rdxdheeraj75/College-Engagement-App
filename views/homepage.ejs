@@ -14,7 +14,7 @@
     <div class="card-body">
       <h5 class="card-title"><%= posts[i].title %></h5>
       <p class="card-text"><%= posts[i].description.substring(0,100) %></p>
-      <a href="/blog" class="btn btn-primary">Read More</a>
+      <a href="blogs/<%= posts[i].title %>" class="btn btn-primary">Read More</a>
     </div>
   </div>
   <%}%>

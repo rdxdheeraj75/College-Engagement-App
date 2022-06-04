@@ -80,6 +80,24 @@ app.get("/create-post", function(req,res){
   }
 });
 
+app.get("/blogs/:title",function(req,res){
+  const requestedTitle = req.params.title;
+
+ 
+  Post.findOne({title: requestedTitle}, null,(err,post)=>{
+    if(err){
+      console.log(err);
+    }else{
+      res.render("detail",{post: post});
+    }
+  });
+  
+});
+
+app.get("/notice", function(req, res){
+  res.render("notice");
+});
+
 app.get("/about",function(req,res){
   res.render("about",{aboutContent: aboutContent});
 });
