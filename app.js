@@ -80,6 +80,23 @@ app.get("/create-post", function(req,res){
   }
 });
 
+app.post("/search", function(req, res){
+
+  Post.findOne({title: req.body.search}, null,(err,post)=>{
+    if(err){
+      console.log(err);
+    }else{
+      if(post != null)
+      res.render("detail",{post: post});
+      else
+      {
+        console.log("No data found");
+      }
+    }
+  });
+
+});
+
 app.get("/blogs/:title",function(req,res){
   const requestedTitle = req.params.title;
 
@@ -92,6 +109,13 @@ app.get("/blogs/:title",function(req,res){
     }
   });
   
+});
+
+app.get("/search", function(req, res){
+  Post.find(function(err,posts){
+    if(!err)
+    res.render("search",{blogs :  posts});
+  });
 });
 
 app.get("/notice", function(req, res){
